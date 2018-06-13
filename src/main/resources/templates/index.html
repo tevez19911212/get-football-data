@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Get Football Data</title>
+	<link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet"></link>
 </head>
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
       th:href="@{/webjars/bootstrap/4.1.0/css/bootstrap.min.css}" rel="stylesheet" />
@@ -12,22 +13,65 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
         th:src="@{/webjars/bootstrap/4.1.0/js/bootstrap.min.js}"></script>
   <body>
-	<h1>マンチェスター・シティFCの試合結果</h1>
+	<select id="teamList">
+		<option value="65">マンチェスター・シティFC</option>
+		<option value="66">マンチェスター・ユナイテッドFC</option>
+	</select>
+	<button id="search" type="button" class="btn btn-primary btn-sm" >検索</button>
+	<h1 id="resultTitle">マンチェスター・シティFCの試合結果</h1>
 	<p>2017-2018シーズンの試合結果を表示します。</p>
-	<div style="margin-top:8px" th:each="teamsFixtures: ${TeamsFixturesDto.fixtures}">
-	<p th:text="${teamsFixtures.date}"></p>
-	<table border="1" style="width:500px;table-layout:fixed">
-		<tbody>
-			<tr>
-				<td style="text-align:center;background: lightblue;"  th:text="${teamsFixtures.homeTeamName}"></td>
-				<td style="text-align:center;background: lightblue;"  th:text="${teamsFixtures.awayTeamName}"></td>
-			</tr>
-			<tr>
-				<td colspan="2" style="text-align:center" th:text="${teamsFixtures.result.goalsHomeTeam + ' - ' + teamsFixtures.result.goalsAwayTeam }"></td>
-			</tr>
-		</tbody>
-	</table>
+	<div style="margin-top:8px" id="matchResult" th:fragment="result" th:each="teamsFixtures: ${TeamsFixturesDto.fixtures}">
+		<table border="1" style="width:500px;table-layout:fixed">
+			<tbody>
+				<tr>
+					<td colspan="2" style="text-align:center;" th:text=" ${#strings.substring(teamsFixtures.date,0,10)} "></td>
+				</tr>
+				<tr>
+					<td style="text-align:center;background: lightblue;"  th:text="${teamsFixtures.homeTeamName}"></td>
+					<td style="text-align:center;background: lightblue;"  th:text="${teamsFixtures.awayTeamName}"></td>
+				</tr>
+				<tr>
+					<td colspan="2" style="text-align:center" th:text="${teamsFixtures.result.goalsHomeTeam + ' - ' + teamsFixtures.result.goalsAwayTeam }"></td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
-	<div class="matchresults-end"></div>
-  </body>
+	<div class="matchresults-end">
+		<p>データの取得先は<a href="http://api.football-data.org/index">こちら</a></p>
+	</div>
+
+	<!-- 読み込み中ダイアログ -->
+	<div id="loader-bg" style="display:none;">
+		<div id="loading">
+			<p>読み込み中です</p>
+		</div>
+	</div>
+
+ 	</body>
+	<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	$(document).ready(function() {
+		$("#search").bind("click" , function() {
+			$("#loader-bg").show();
+
+			$.ajax({
+				type:"get",
+				url:"search/" + $("#teamList").val(),
+				//data:{"teamId":$("#teamList").val()}
+				dataType: 'html',
+				success: function(data){
+					var teamName = $('#teamList  option:selected').text();
+					$("#resultTitle").html(teamName + "の試合結果");
+					$('#matchResult').html(data);
+					$("#loader-bg").hide();
+				},
+			});
+	    });
+	});
+
+	$(window).load(function () {
+		$("#loader-bg").hide();
+	})
+	/*]]>*/
+	</script>
 </html>
