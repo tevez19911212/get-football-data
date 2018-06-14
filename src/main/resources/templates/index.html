@@ -13,10 +13,13 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
         th:src="@{/webjars/bootstrap/4.1.0/js/bootstrap.min.js}"></script>
 <body>
-	<section class="container-fluid">
+	<div class="mx-auto" style="width: 200px;">
+		<button id="searchRussiaWc" type="button" class="btn btn-primary btn-lg" >ロシアワールドカップ</button>
+	</div>
+	<section class="container-fluid mx-auto" style="width: 300px;">
 		<div class="row">
-			<div class="col-lg-12">
-				<select id="teamList">
+			<div class="col-lg-12 mx-auto"  style="width: 200px;">
+				<select id="teamList" >
 					<option value="57">アーセナルFC</option>
 					<option value="563">ウェストハム・ユナイテッドFC</option>
 					<option value="74">ウェスト・ブロムウィッチ・アルビオンFC</option>
@@ -46,13 +49,8 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-lg-12">
-				<p>2017-2018シーズンの試合結果を表示します。</p>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-12" th:if="${TeamsFixturesDto != null}" th:fragment="result">
-				<div style="margin-top:8px" id="matchResult" th:each="teamsFixtures: ${TeamsFixturesDto.fixtures}">
+			<div class="col-lg-12" th:if="${TeamsFixturesDto != null}" th:fragment="result" id="matchResult">
+				<div style="margin-top:8px"  th:each="teamsFixtures: ${TeamsFixturesDto.fixtures}">
 					<table border="1" style="width:500px;table-layout:fixed">
 						<tbody>
 							<tr>
@@ -62,7 +60,7 @@
 								<td style="text-align:center;background: lightblue;"  th:text="${teamsFixtures.homeTeamName}"></td>
 								<td style="text-align:center;background: lightblue;"  th:text="${teamsFixtures.awayTeamName}"></td>
 							</tr>
-							<tr>
+							<tr th:if="${teamsFixtures.result.goalsHomeTeam != null}">
 								<td colspan="2" style="text-align:center" th:text="${teamsFixtures.result.goalsHomeTeam + ' - ' + teamsFixtures.result.goalsAwayTeam }"></td>
 							</tr>
 						</tbody>
@@ -86,6 +84,7 @@
 	<script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 	$(document).ready(function() {
+		// 検索ボタン
 		$("#search").bind("click" , function() {
 			$("#loader-bg").show();
 
@@ -97,6 +96,21 @@
 				success: function(data){
 					var teamName = $('#teamList  option:selected').text();
 					//$("#resultTitle").html(teamName + "の試合結果");
+					$('#matchResult').html(data);
+					$("#loader-bg").hide();
+				},
+			});
+	    });
+
+		// ロシアワールドカップボタン
+		$("#searchRussiaWc").bind("click" , function() {
+			$("#loader-bg").show();
+			$.ajax({
+				type:"get",
+				url:"search/russiaWc",
+				dataType: 'html',
+				success: function(data){
+					var teamName = $('#teamList  option:selected').text();
 					$('#matchResult').html(data);
 					$("#loader-bg").hide();
 				},

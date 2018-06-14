@@ -32,4 +32,11 @@ public class GetFootballDataController {
 		 model.addAttribute("TeamsFixturesDto", dto);
 		return "index :: result";
 	}
+
+	@RequestMapping(value="/search/russiaWc", method = RequestMethod.GET)
+	public String  searchRussiaWc(Model model) {
+		TeamsFixturesDto dto = service.getRussiaWCMatchresults();
+		 model.addAttribute("TeamsFixturesDto", dto);
+		return "index :: result";
+	}
 }
