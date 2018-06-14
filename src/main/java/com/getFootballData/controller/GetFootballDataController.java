@@ -18,11 +18,10 @@ public class GetFootballDataController {
 
 	@RequestMapping(value="/", method = RequestMethod.GET)
 	public String index(Model model) {
-		// TODO とりあえず2017-2018シーズン固定 将来的には画面から取得する
-		String season = "2017";
 		String teamId = "65";
+		String season = "2017";
 		TeamsFixturesDto dto = service.getMatchresults(teamId, season);
-		model.addAttribute("TeamsFixturesDto", dto);
+		 model.addAttribute("TeamsFixturesDto", dto);
 		return "index";
 	}
 
@@ -31,7 +30,6 @@ public class GetFootballDataController {
 		String season = "2017";
 		TeamsFixturesDto dto = service.getMatchresults(teamId, season);
 		 model.addAttribute("TeamsFixturesDto", dto);
-		// return "index";
 		return "index :: result";
 	}
 }

@@ -1,4 +1,10 @@
 @charset "UTF-8";
+
+body{
+	text-align: center;
+	margin: auto;
+}
+
 #loading{
 	position: absolute;
 	left: 50%;
