@@ -18,16 +18,11 @@ public class GetFootballDataController {
 
 	@RequestMapping(value="/", method = RequestMethod.GET)
 	public String index(Model model) {
-		String teamId = "65";
-		String season = "2017";
-		TeamsFixturesDto dto = service.getMatchresults(teamId, season);
-		 model.addAttribute("TeamsFixturesDto", dto);
 		return "index";
 	}
 
-	@RequestMapping(value="/search/{teamId}", method = RequestMethod.GET)
-	public String  search(@PathVariable String teamId, Model model) {
-		String season = "2017";
+	@RequestMapping(value="/search/{teamId}/{season}", method = RequestMethod.GET)
+	public String  search(@PathVariable String teamId, @PathVariable String season, Model model) {
 		TeamsFixturesDto dto = service.getMatchresults(teamId, season);
 		 model.addAttribute("TeamsFixturesDto", dto);
 		return "index :: result";

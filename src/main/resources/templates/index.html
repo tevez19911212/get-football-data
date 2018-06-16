@@ -17,6 +17,17 @@
 		<button id="searchRussiaWc" type="button" class="btn btn-primary btn-lg" >ロシアワールドカップ</button>
 	</div>
 	<section class="container-fluid mx-auto" style="width: 300px;">
+		<!-- シーズン -->
+		<div class="row">
+			<div class="col-lg-12 mx-auto"  style="width: 200px;">
+				<select id="seasonList" >
+					<option value="2017" selected>2017-2018</option>
+					<option value="2016">2016-2017</option>
+					<option value="2015">2015-2016</option>
+				</select>
+			</div>
+		</div>
+		<!-- チーム -->
 		<div class="row">
 			<div class="col-lg-12 mx-auto"  style="width: 200px;">
 				<select id="teamList" >
@@ -48,8 +59,8 @@
 				<h2 id="resultTitle">試合結果</h2>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-lg-12" th:if="${TeamsFixturesDto != null}" th:fragment="result" id="matchResult">
+		<div class="row"  id="matchResult">
+			<div class="col-lg-12" th:if="${TeamsFixturesDto != null}" th:fragment="result">
 				<div style="margin-top:8px"  th:each="teamsFixtures: ${TeamsFixturesDto.fixtures}">
 					<table border="1" style="width:500px;table-layout:fixed">
 						<tbody>
@@ -84,14 +95,14 @@
 	<script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 	$(document).ready(function() {
+		$("#loader-bg").hide();
 		// 検索ボタン
 		$("#search").bind("click" , function() {
 			$("#loader-bg").show();
 
 			$.ajax({
 				type:"get",
-				url:"search/" + $("#teamList").val(),
-				//data:{"teamId":$("#teamList").val()}
+				url:"search/" + $("#teamList").val() + "/" + $("#seasonList").val(),
 				dataType: 'html',
 				success: function(data){
 					var teamName = $('#teamList  option:selected').text();
@@ -117,10 +128,6 @@
 			});
 	    });
 	});
-
-	$(window).load(function () {
-		$("#loader-bg").hide();
-	})
 	/*]]>*/
 	</script>
 </html>
